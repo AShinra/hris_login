@@ -89,8 +89,8 @@ def location_screen():
 
         st.map(pd.DataFrame({"lat": [latitude], "lon": [longitude]}))
 
-        with st.expander("Raw location data"):
-            st.write(location)
+        # with st.expander("Raw location data"):
+        #     st.write(location)
     else:
         st.info("Waiting for location — click the icon above and allow access.")
 
