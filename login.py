@@ -1,23 +1,4 @@
 import streamlit as st
-import pandas as pd
-from streamlit_geolocation import streamlit_geolocation
-from geopy.geocoders import Nominatim
-from datetime import datetime
-
-
-# ---------------------------------------------------------------------------
-# Auth — replace this with your real authentication (DB lookup, OAuth, etc.).
-# Never hard-code real credentials in production; use secrets/env vars.
-# ---------------------------------------------------------------------------
-CREDENTIALS = {
-    "admin": "password123",
-    "ronald": "letmein",
-}
-
-
-def check_credentials(username: str, password: str) -> bool:
-    return CREDENTIALS.get(username) == password
-
 
 # ---------------------------------------------------------------------------
 # Session state defaults
@@ -26,91 +7,36 @@ def init_state():
     st.session_state.setdefault("logged_in", False)
     st.session_state.setdefault("username", "")
 
-
 # ---------------------------------------------------------------------------
-# Login screen
+# Login window
 # ---------------------------------------------------------------------------
 def login_screen():
-    st.title("🔐 Login")
 
-    username = st.text_input("Username")
-    password = st.text_input("Password", type="password")
+    left, center, right = st.columns([1, 2, 1])
 
-    if st.button("Login"):
-        if check_credentials(username, password):
-            st.session_state.logged_in = True
-            st.session_state.username = username
-            st.rerun()
-        else:
-            st.error("Invalid username or password.")
+    with center:
+        with st.container(border=True):
+            st.markdown("<h1 style='text-align:center;'>WorkMatrix</h1>", unsafe_allow_html=True)
+            st.markdown("<h3 style='text-align:center;'>🔐 Sign In</h3>", unsafe_allow_html=True)
 
+            username = st.text_input("Username")
+            password = st.text_input("Password", type="password")
 
-# ---------------------------------------------------------------------------
-# Main app — shown only after login. Captures the user's location.
-# ---------------------------------------------------------------------------
-def location_screen():
-    st.title("📍 Your Location")
-    st.write(f"Welcome, **{st.session_state.username}**!")
-
-    st.write("Click the location icon below and allow access in your browser:")
-
-    # The component renders its own button. Call it directly and check the
-    # coordinate values — a dict full of None is still truthy.
-    location = streamlit_geolocation()
-
-    if location and location.get("latitude") is not None:
-        latitude = location["latitude"]
-        longitude = location["longitude"]
-
-        # st.success(f"Latitude: {latitude}")
-        # st.success(f"Longitude: {longitude}")
-
-        geolocator = Nominatim(user_agent="hris_app")
-
-        location = geolocator.reverse(
-            (latitude, longitude),
-            language="en",
-            exactly_one=True)
-        
-        if location:
-            loc_data = {"address": location.address,
-            "latitude": location.latitude,
-            "longitude": location.longitude,
-            "raw": location.raw}
-            st.write(loc_data['address'])
-            st.write(f'Logged in at {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')
+            if st.button("Login", use_container_width=True):
+                pass
 
 
 
 
-        # accuracy = location.get("accuracy")
-        # if accuracy is not None:
-        #     st.caption(f"Accuracy: ±{accuracy:.0f} m")
-
-        st.map(pd.DataFrame({"lat": [latitude], "lon": [longitude]}))
-
-        # with st.expander("Raw location data"):
-        #     st.write(location)
-    else:
-        st.info("Waiting for location — click the icon above and allow access.")
-
-    # st.divider()
-    # if st.button("Log out"):
-    #     st.session_state.logged_in = False
-    #     st.session_state.username = ""
-    #     st.rerun()
-
-
-# ---------------------------------------------------------------------------
-# Router
-# ---------------------------------------------------------------------------
 def main():
     init_state()
 
-    if st.session_state.logged_in==True:
-        location_screen()
-    else:
-        login_screen()
+    login_screen()
+
+    # if st.session_state.logged_in==True:
+    #     location_screen()
+    # else:
+    #     login_screen()
 
 if __name__ == "__main__":
     main()
