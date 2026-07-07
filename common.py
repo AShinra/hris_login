@@ -1,4 +1,5 @@
 import streamlit as st
+import streamlit.components.v1 as components
 from pathlib import Path
 import base64
 
@@ -84,3 +85,77 @@ def add_bg(image_file):
         """,
         unsafe_allow_html=True,
     )
+
+def flip_clock():
+    html = """
+    <!DOCTYPE html>
+    <html>
+    <head>
+    <style>
+    body {
+        background: transparent;
+    }
+
+    .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    }
+
+    .clock {
+        display: flex;
+        gap: 1px;
+        font-family: 'Arial Black', sans-serif;
+    }
+    .digit {
+        background: linear-gradient(#333, #000);
+        color: white;
+        font-size: 30px;
+        padding: 10px 10px;
+        border-radius: 8px;
+        box-shadow: inset 0 -4px 0 rgba(0,0,0,0.4);
+    }
+    .colon {
+        font-size: 30px;
+        color: white;
+        padding-top: 10px;
+    }
+    </style>
+    </head>
+
+    <body>
+    <div class="container">
+        <div class="clock">
+            <div class="digit" id="h1">0</div>
+            <div class="digit" id="h2">0</div>
+            <div class="colon">:</div>
+            <div class="digit" id="m1">0</div>
+            <div class="digit" id="m2">0</div>
+            <div class="colon">:</div>
+            <div class="digit" id="s1">0</div>
+            <div class="digit" id="s2">0</div>
+        </div>
+    </div>
+
+    <script>
+    function updateClock() {
+        const now = new Date();
+        const h = String(now.getHours()).padStart(2,'0');
+        const m = String(now.getMinutes()).padStart(2,'0');
+        const s = String(now.getSeconds()).padStart(2,'0');
+        const t = h + m + s;
+
+        ["h1","h2","m1","m2","s1","s2"].forEach((id,i)=>{
+            document.getElementById(id).innerText = t[i];
+        });
+    }
+
+    setInterval(updateClock, 1000);
+    updateClock();
+    </script>
+    </body> 
+    </html>
+    """
+
+    components.html(html, height=120)
