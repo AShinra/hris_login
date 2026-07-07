@@ -33,5 +33,5 @@ if __name__ == '__main__':
     
 if selected_option=='Employees':
     employees.employees_dashboard()
-if selected_option=='Login':
-    start_process()
+# if selected_option=='Login':
+#     start_process()
