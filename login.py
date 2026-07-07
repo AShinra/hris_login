@@ -33,7 +33,7 @@ def login_screen():
             password = st.text_input("**Password**", type="password")
 
             if st.button("Sign In", use_container_width=True):
-                document = client.find({'work_email':email})
+                document = client.find_one({'work_email':email})
                 st.write(document)
 
 
