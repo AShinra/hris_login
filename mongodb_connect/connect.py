@@ -30,3 +30,7 @@ def get_salary_info(salary_info_id):
 def get_government_benefit_info(government_benefit_id):
     collection = connect_to_collection('benefits_government')
     return collection.find_one({'_id':government_benefit_id})
+
+def get_credentials(credentials_id):
+    collection = connect_to_collection('credentials')
+    return collection.find_one({'_id':credentials_id})
