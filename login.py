@@ -1,6 +1,6 @@
 import streamlit as st
 from common import add_bg
-from mongodb_connect.connect import get_credentials, connect_to_collection
+from mongodb_connect.connect import connect_to_collection
 
 # ---------------------------------------------------------------------------
 # Session state defaults
