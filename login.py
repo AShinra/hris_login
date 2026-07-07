@@ -56,7 +56,8 @@ def dialog_signin_error(item):
 # ---------------------------------------------------------------------------
 def init_state():
     st.session_state.setdefault("logged_in", False)
-    st.session_state.setdefault("username", "")    
+    st.session_state.setdefault("username", "")
+    st.session_state.setdefault("document", "")
 
 # ---------------------------------------------------------------------------
 # Login window
@@ -84,6 +85,7 @@ def login_screen():
                     user_credential = credential_collection.find_one({"_id":credential_id})
                     if user_credential['password']==password:
                         st.session_state.logged_in=True
+                        st.session_state.document=document
                         st.rerun()
                     else:
                         dialog_signin_error('password')
@@ -96,7 +98,7 @@ def login_screen():
 
 
 def main():
-    init_state()
+    init_state()    
 
     if st.session_state.logged_in==True:
         employee_profile()
@@ -104,4 +106,11 @@ def main():
         login_screen()
 
 if __name__ == "__main__":
+
+    st.set_page_config(
+        page_title="HRIS",
+        page_icon="👥",
+        layout="wide",
+        initial_sidebar_state="expanded")
+    
     main()
