@@ -5,16 +5,25 @@ from mongodb_connect.connect import get_personal_info, get_employment_info, get_
 
 def profile_data():
 
-    st.markdown(f"""
-        <div style="line-height:1.2;">
-        <h3 style="margin:0;">My Profile</h3>        
-        </div>
-        """, unsafe_allow_html=True)
-    
-    document = st.session_state.document    
+    # initialize data
+    document = st.session_state.document
+    # st.write(document)
 
-    with st.container(border=True):
-        cols = st.columns([1,3,3,3], gap="xxsmall", border=False)
+    personal_info_id = document['personal_info_id']
+    personal_info_document = get_personal_info(personal_info_id)
+    # st.write(personal_info_document)
+
+    employment_info_id = document['employment_info_id']
+    employment_document = get_employment_info(employment_info_id)
+    # st.write(employment_document)
+
+    government_benefit_id = document['government_benefit_id']
+    government_benefit_document = get_government_benefit_info(government_benefit_id)
+    # st.write(government_benefit_document)
+
+
+    with st.container(border=False):
+        cols = st.columns([1,9], gap="xxsmall", border=False)
         with cols[0]:
             st.markdown("""
             <style>
@@ -38,52 +47,54 @@ def profile_data():
                 part for part in [lname, fname]
                 if part)
 
-            employment_id = document['employment_info_id']
-            employment_collection = connect_to_collection('employment_info')
-            employment_document = employment_collection.find_one({'_id':employment_id})
-
-            personal_id = document['personal_info_id']
-            personal_collection = connect_to_collection('personal_info')
-            personal_document = personal_collection.find_one({'_id':personal_id})
+            _address = []
+            for k, v in personal_info_document["current_address"].items():
+                _address.append(v)           
+            
+            current_address = ", ".join(part for part in _address if part)
 
             st.markdown(f"""
             <div style="line-height:1.0;">
                 <p style="margin:0; font-size:40px;"><strong>{fullname}</strong></p>
                 <p style="margin:0; font-size:20px;">{document['employee_id']} | {employment_document['position']}</p>
                 <p style="margin:0; font-size:20px;">{employment_document['department']}</p>
-                <p style="margin:0; font-size:15px; color:#6c757d;">Address: {", ".join(personal_document['current_address'])}</p>
+                <p style="margin:0; font-size:15px; color:#6c757d;">Address: {current_address}</p>
                 <p style="margin:0; font-size:15px; color:#6c757d;">{document['mobile_no']}</p>
-                <p style="margin:0; font-size:15px; color:#6c757d;">{document['work_email']}</p>
+                <p style="margin:0 0 0 1; font-size:15px; color:#6c757d;">{document['work_email']}</p>
             </div>
             """, unsafe_allow_html=True)
+    
+    with st.expander('Expand Information', expanded=False):
+        cols = st.columns([1,1], gap="xxsmall", border=False)
+        with cols[0]:
+            st.markdown(f"""
+                <table style="width:100%; border-collapse:collapse; font-size:15px;">
+                    <tr>
+                        <td style="padding:4px 0; width:30%;"><strong>Gender</strong></td>
+                        <td style="padding:4px 0;"><strong>{personal_info_document['gender']}</strong></td>
+                    </tr>
+                    <tr>
+                        <td style="padding:4px 0;"><strong>Date of Birth</strong></td>
+                        <td style="padding:4px 0;"><strong>{personal_info_document['date_of_birth'].strftime('%b %d, %Y')}</strong></td>
+                    </tr>
+                    <tr>
+                        <td style="padding:4px 0;"><strong>Social Security Number</strong></td>
+                        <td style="padding:4px 0;"><strong>{government_benefit_document['sss']['sss_number']}</strong></td>
+                    </tr>
+                    <tr>
+                        <td style="padding:4px 0;"><strong>PhilHealth Number</strong></td>
+                        <td style="padding:4px 0;"><strong>{government_benefit_document['philhealth']['philhealth_number']}</strong></td>
+                    </tr>
+                    <tr>
+                        <td style="padding:4px 0;"><strong>Pag-IBIG Number</strong></td>
+                        <td style="padding:4px 0;"><strong>{government_benefit_document['pagibig']['pagibig_mid']}</strong></td>
+                    </tr>
+                    <tr>
+                        <td style="padding:4px 0;"><strong>Tax Identification Number</strong></td>
+                        <td style="padding:4px 0;"><strong>{government_benefit_document['tax']['tin']}</strong></td>
+                    </tr>
+                </table>
+                """, unsafe_allow_html=True)
         
-        with cols[2]:
 
-            try:
-                government_benefit_id = document['government_benefit_id']
-                government_benefit_document = get_government_benefit_info(government_benefit_id)
-
-                col = st.columns([2,8], gap='xxsmall', border=False)
-                with col[0]:
-                    st.markdown(f"""
-                    <div style="line-height:1.0;">
-                        <p style="margin:0; font-size:15px; color:#6c757d;">SSS:</p>
-                        <p style="margin:0; font-size:15px; color:#6c757d;">PHIC:</p>
-                        <p style="margin:0; font-size:15px; color:#6c757d;">HDMF:</p>
-                        <p style="margin:0; font-size:15px; color:#6c757d;">TIN:</p>
-                    </div>
-                    """, unsafe_allow_html=True)
-                with col[1]:
-                    st.markdown(f"""
-                    <div style="line-height:1.0;">
-                        <p style="margin:0; font-size:15px; color:#6c757d;">{government_benefit_document['sss']['sss_number']}</p>
-                        <p style="margin:0; font-size:15px; color:#6c757d;">{government_benefit_document['philhealth']['philhealth_number']}</p>
-                        <p style="margin:0; font-size:15px; color:#6c757d;">{government_benefit_document['pagibig']['pagibig_mid']}</p>
-                        <p style="margin:0; font-size:15px; color:#6c757d;">{government_benefit_document['tax']['tin']}</p>
-                    </div>
-                    """, unsafe_allow_html=True)
-            except:
-                st.write('Updating this section for government benefits...')
-
-        with cols[3]:
-            st.write('Updating this section for leave credits and other information...')
+            
