@@ -59,9 +59,7 @@ def profile_data():
             </div>
             """, unsafe_allow_html=True)
     
-    tabs = st.tabs(['Personal Info', 'Employment Info'])
-    with tabs[0]:
-    # with st.expander('Expand Information', expanded=False):
+    with st.expander('Expand Information', expanded=False):
         cols = st.columns([1,1], gap="xxsmall", border=False)
         with cols[0]:
             st.markdown("""
@@ -77,11 +75,11 @@ def profile_data():
             st.markdown(f"""
                 <table style="width:100%; border-collapse:collapse; font-size:15px;">
                     <tr>
-                        <td style="background-color:#dee2e6; font-size:20px; color:#429E9D;"><strong><u>Bio</u></strong></td>
+                        <td style="font-size:20px; color:#429E9D;"><strong><u>Bio</u></strong></td>
                     </tr>
                     <tr>
                         <td style="width:60%;"><strong>Gender</strong></td>
-                        <td style="background-color:#dee2e6;"><strong>{personal_info_document['gender']}</strong></td>
+                        <td><strong>{personal_info_document['gender']}</strong></td>
                     </tr>
                     <tr>
                         <td style="width:30%;"><strong>Birth Date</strong></td>
@@ -103,34 +101,8 @@ def profile_data():
                         <td style="width:60%;"><strong>Blood Type</strong></td>
                         <td><strong>{personal_info_document['blood_type']}</strong></td>
                     </tr>
-                    </table>
-                    """, unsafe_allow_html=True)
-            
-            with st.expander('**:blue[Emergency Contact Info]**'):
-                st.markdown(f"""
-                <table style="width:100%; border-collapse:collapse; font-size:15px;">
                     <tr>
-                        <td style="padding:4px 0; width:60%;"><strong>Status</strong></td>
-                        <td style="padding:4px 0;"><strong>{employment_document['employment_status']}</strong></td>
-                    </tr>
-                </table>
-                """, unsafe_allow_html=True)
-
-        with cols[1]:
-            st.markdown("""
-            <style>
-            table, tbody, tr, td, th {
-                border: none !important;
-                border-collapse: collapse !important;
-                padding:1px 0 !important;
-            }
-            </style>
-            """, unsafe_allow_html=True)
-
-            st.markdown(f"""
-                <table style="width:100%; border-collapse:collapse; font-size:15px;">
-                    <tr>
-                        <td style="padding:4px 0; width:60%; font-size:20px; color:#429E9D;"><strong><u>Permanent Address</u></strong></td>
+                        <td style="padding:4px 0; width:30%; font-size:20px; color:#429E9D;"><strong><u>Permanent Address</u></strong></td>
                     </tr>
                     <tr>
                         <td style="padding:4px 0; width:30%;"><strong>House Number</strong></td>
@@ -170,10 +142,8 @@ def profile_data():
                     </tr>
                 </table>
                 """, unsafe_allow_html=True)
-
-    with tabs[1]:
-        cols = st.columns([1,1], gap="xxsmall", border=False)
-        with cols[0]:
+        
+        with cols[1]:
             st.markdown("""
             <style>
             table, tbody, tr, td, th {
@@ -204,26 +174,55 @@ def profile_data():
                         <td style="padding:4px 0; width:60%;"><strong>Supervisor</strong></td>
                         <td style="padding:4px 0;"><strong>{employment_document['supervisor']}</strong></td>
                     </tr>
-                </table>
-                """, unsafe_allow_html=True)
-
-        with cols[1]:
-            st.markdown("""
-            <style>
-            table, tbody, tr, td, th {
-                border: none !important;
-                border-collapse: collapse !important;
-            }
-            </style>
-            """, unsafe_allow_html=True)
-
-            st.markdown(f"""
-                <table style="width:100%; border-collapse:collapse; font-size:15px;">
                     <tr>
-                        <td style="font-size:20px; color:#429E9D;"><strong><u>Government ID Nos.</u></strong></td>
+                        <td style="font-size:20px; color:#429E9D;"><strong><u>Govt ID Numbers</u></strong></td>
                     </tr>
                     <tr>
-                        <td style="padding:4px 0; width:60%;"><strong>Social Security Number</strong></td>
+                        <td style="padding:4px 0; width:30%;"><strong>Social Security Number</strong></td>
+                        <td style="padding:4px 0;"><strong>{government_benefit_document['sss']['sss_number']}</strong></td>
+                    </tr>
+                    <tr>
+                        <td style="padding:4px 0; width:30%;"><strong>PhilHealth Number</strong></td>
+                        <td style="padding:4px 0;"><strong>{government_benefit_document['philhealth']['philhealth_number']}</strong></td>
+                    </tr>
+                    <tr>
+                        <td style="padding:4px 0; width:30%;"><strong>Pag-IBIG Number</strong></td>
+                        <td style="padding:4px 0;"><strong>{government_benefit_document['pagibig']['pagibig_mid']}</strong></td>
+                    </tr>
+                    <tr>
+                        <td style="padding:4px 0; width:30%;"><strong>Tax Identification Number</strong></td>
+                        <td style="padding:4px 0;"><strong>{government_benefit_document['tax']['tin']}</strong></td>
+                    </tr>
+                </table>
+                """, unsafe_allow_html=True)
+            
+            with st.expander(f'**:blue[Emergency Contact]**'):
+                st.markdown(f"""
+                <table style="width:100%; border-collapse:collapse; font-size:15px;">
+                    <tr>
+                        <td style="font-size:20px; color:#429E9D;"><strong><u>Work Info</u></strong></td>
+                    </tr>
+                    <tr>
+                        <td style="padding:4px 0; width:60%;"><strong>Status</strong></td>
+                        <td style="padding:4px 0;"><strong>{employment_document['employment_status']}</strong></td>
+                    </tr>
+                    <tr>
+                        <td style="padding:4px 0; width:60%;"><strong>Employment</strong></td>
+                        <td style="padding:4px 0;"><strong>{employment_document['employment_type']}</strong></td>
+                    </tr>
+                    <tr>
+                        <td style="padding:4px 0; width:60%;"><strong>Manager</strong></td>
+                        <td style="padding:4px 0;"><strong>{employment_document['manager']}</strong></td>
+                    </tr>
+                    <tr>
+                        <td style="padding:4px 0; width:60%;"><strong>Supervisor</strong></td>
+                        <td style="padding:4px 0;"><strong>{employment_document['supervisor']}</strong></td>
+                    </tr>
+                    <tr>
+                        <td style="font-size:20px; color:#429E9D;"><strong><u>Govt ID Numbers</u></strong></td>
+                    </tr>
+                    <tr>
+                        <td style="padding:4px 0; width:30%;"><strong>Social Security Number</strong></td>
                         <td style="padding:4px 0;"><strong>{government_benefit_document['sss']['sss_number']}</strong></td>
                     </tr>
                     <tr>
@@ -241,4 +240,5 @@ def profile_data():
                 </table>
                 """, unsafe_allow_html=True)
         
-        
+
+            
