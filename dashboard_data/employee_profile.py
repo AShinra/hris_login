@@ -214,7 +214,7 @@ def profile_data():
         border-radius:16px;
         padding:20px;
         box-shadow:0 2px 8px rgba(0,0,0,.05);
-        margin-bottom:18px;
+        margin-bottom:0px;
     }
 
     .info-title{
@@ -251,14 +251,10 @@ def profile_data():
 
 
 
-    tab1, tab2 = st.tabs(["**Personal Info**", "**Employment Info**"])
-
-    with tab1:
-
+    tabs = st.tabs(["**Personal Info**", "**Employment Info**", "**Contact Info**"])
+    with tabs[0]:
         left, right = st.columns(2)
-
         with left:
-
             st.markdown(f"""
             <div style="
                         background: white;
