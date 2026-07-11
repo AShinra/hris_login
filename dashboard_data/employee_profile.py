@@ -3,44 +3,42 @@ from mongodb_connect.connect import connect_to_collection
 from mongodb_connect.connect import get_personal_info, get_employment_info, get_government_benefit_info
 
 
-# def info_card(title, items):
+def info_card(title, items):
 
-#     rows = ""
+    rows = ""
 
-#     for label, value in items.items():
-#         rows += f"""
-#         <div style="display:flex; justify-content:space-between;">
-#             <span><i class="bi bi-person-fill" style="color:blue; margin-right:8px;"></i>{label}</span>
-#             <span>{value}</span>
-#         </div>
-#         """
+    for label, value in items.items():
+        rows += f"""
+        <div style="display:flex; justify-content:space-between;">
+            <span><i class="bi bi-person-fill" style="color:blue; margin-right:8px;"></i>{label}</span>
+            <span>{value}</span>
+        </div>"""
 
-#     st.markdown(f"""
-#             <div style="
-#                         background: white;
-#                         border: 1px solid #E2E8F0;
-#                         border-radius: 10px;
-#                         padding: 10px;
-#                         box-shadow: 0 4px 12px rgba(0,0,0,.06);
-#                         margin-bottom: 20px;">
-#                 <div>
-#                     <i class="bi bi-person" style="color:blue; font-size:25px;"></i>
-#                     <b style="color:blue; font-size:20px;">Bio</b>
-#                     <div style="
-#                     background: white;
-#                     border: 1px solid #E2E8F0;
-#                     border-radius: 5px;
-#                     padding: 10px;
-#                     box-shadow: 0 4px 12px rgba(0,0,0,.06);
-#                     margin-bottom: 10px;">
-#                         <div style="display:flex; justify-content:space-between;">
-#                             <span><i class="bi bi-person-fill" style="color:blue; margin-right:8px;"></i>{title}</span>
-#                             <span>{value}</span>
-#                         </div>
-#                     </div>
-#                 </div>
-#             </div>""", unsafe_allow_html=True)
-
+    st.markdown(f"""
+            <div style="
+                        background: white;
+                        border: 1px solid #E2E8F0;
+                        border-radius: 10px;
+                        padding: 10px;
+                        box-shadow: 0 4px 12px rgba(0,0,0,.06);
+                        margin-bottom: 20px;">
+                <div>
+                    <i class="bi bi-person" style="color:blue; font-size:25px;"></i>
+                    <b style="color:blue; font-size:20px;">{title}</b>
+                </div>
+                    <div style="
+                    background: white;
+                    border: 1px solid #E2E8F0;
+                    border-radius: 5px;
+                    padding: 10px;
+                    box-shadow: 0 4px 12px rgba(0,0,0,.06);
+                    margin-bottom: 10px;">
+                        {rows}
+                    </div>
+                </div>""", unsafe_allow_html=True)
+    
+    
+    
 
 
 def profile_data():
@@ -251,7 +249,7 @@ def profile_data():
 
 
 
-    tabs = st.tabs(["**Personal Info**", "**Employment Info**", "**Contact Info**"])
+    tabs = st.tabs(["**Personal Info**", "**Employment Info**", "**Contact Info**", "**Government Info**"])
     with tabs[0]:
         left, right = st.columns(2)
         with left:
@@ -363,19 +361,92 @@ def profile_data():
             </div>
             """, unsafe_allow_html=True)
 
+    with tabs[1]:
+        left, right = st.columns(2)
+        with left:
+            info_card(
+                "Employement",
+                {
+                    "Date Hired": employment_document["date_hired"].strftime("%b %d, %Y"),
+                    "Status": employment_document["employment_status"],
+                    "Type": employment_document["employment_type"],
+                    "Department": employment_document["department"],
+                    "Position": employment_document["position"],
+                    "Manager": employment_document["manager"],
+                    "Supervisor": employment_document["supervisor"],
+                    "Arrangement": employment_document["work_arrangement"],
+                    "Shift": employment_document["shift_schedule"],
+                }
+            )        
+    
+    with tabs[2]:
+        left, right = st.columns(2)
+        with left:
+            info_card(
+                "Contacts",
+                {
+                    "Person": personal_info_document["contact_person"],
+                    "Relationship": personal_info_document["relationship"],
+                    "Number": personal_info_document["contact_no"],
+                    "House No.": personal_info_document["contact_address"]['house_no'],
+                    "Street": personal_info_document["contact_address"]['street'],
+                    "Subdivision": personal_info_document["contact_address"]['subdivision'],
+                    "Barangay": personal_info_document["contact_address"]['barangay'],
+                    "City": personal_info_document["contact_address"]['city_municipality'],
+                    "Province": personal_info_document["contact_address"]['province'],
+                    "Region": personal_info_document["contact_address"]['region'],
+                    "Postal Code": personal_info_document["contact_address"]['postal_code'],
+                    "Country": personal_info_document["contact_address"]['country'],
+                }
+            )
+    
+    with tabs[3]:
+        left, right = st.columns(2)
+        with left:
+            sss = government_benefit_document['sss']
+            info_card(
+                "Social Security System",
+                {
+                    "Number": sss["sss_number"],
+                    "Status": sss["membership_type"],
+                    "Contribution.": sss["contribution_type"],
+                    "Effectivity.": sss["effectivity_date"],
+                }
+            )
+            pi = government_benefit_document['pagibig']
+            info_card(
+                "PagIBIG",
+                {
+                    "Number": pi["pagibig_mid"],
+                    "Status": pi["membership_status"],
+                    "Effectivity.": pi["effectivity_date"],
+                }
+            )
 
-            # info_card(
-            #     "Bio",
-            #     {
-            #         "Gender": personal_info_document["gender"],
-            #         "Birth Date": personal_info_document["date_of_birth"].strftime("%b %d, %Y"),
-            #         "Birth Place": personal_info_document["place_of_birth"],
-            #         "Civil Status": personal_info_document["civil_status"],
-            #         "Nationality": personal_info_document["nationality"],
-            #         "Blood Type": personal_info_document["blood_type"],
-            #     },
-            #     "🧑"
-            # )
+        
+        with right:
+            phic = government_benefit_document['philhealth']
+            info_card(
+                "PhilHealth",
+                {
+                    "Number": phic["philhealth_number"],
+                    "Status": phic["membership_type"],
+                    "Contribution.": phic["contribution_type"],
+                    "Effectivity.": phic["effectivity_date"],
+                }
+            )
+
+            bir = government_benefit_document['tax']
+            info_card(
+                "Bureau of Internal Revenue",
+                {
+                    "Number": bir["tin"],
+                    "Status": bir["tax_status"],
+                    "RDO": bir["registered_rdo"],
+                }
+            )
+        
+        
 
     #     with right:
 

@@ -11,7 +11,7 @@ def dashboard():
     with st.sidebar:
         
         # display the flip clock on sidebar
-        flip_clock()
+        # flip_clock()
 
         profile_options = option_menu(
             menu_title="",

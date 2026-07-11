@@ -80,8 +80,9 @@ def time_loc(item):
                         "latitude": location.latitude,
                         "longitude": location.longitude,
                         "raw": location.raw}
-            st.write(loc_data['address'])
-            st.write(f'{item} at {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')
+            # st.write(loc_data['address'])
+            # st.write(f'{item} at {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')
+            st.write(f'You are logged in at {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')
 
         # accuracy = location.get("accuracy")
         # if accuracy is not None:

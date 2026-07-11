@@ -157,5 +157,5 @@ def flip_clock():
     </body> 
     </html>
     """
-
+    
     components.html(html, height=120)
