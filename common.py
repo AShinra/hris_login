@@ -109,16 +109,16 @@ def flip_clock():
         font-family: 'Arial Black', sans-serif;
     }
     .digit {
-        background: linear-gradient(#333, #000);
+        background: linear-gradient(black, gray);
         color: white;
-        font-size: 30px;
+        font-size: 50px;
         padding: 10px 10px;
         border-radius: 8px;
         box-shadow: inset 0 -4px 0 rgba(0,0,0,0.4);
     }
     .colon {
-        font-size: 30px;
-        color: white;
+        font-size: 50px;
+        color: black;
         padding-top: 10px;
     }
     </style>
