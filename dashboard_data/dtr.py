@@ -1,28 +1,8 @@
 import streamlit as st
-from common import flip_clock
+from common import flip_clock, validate_login
 from get_time_loc import time_loc
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+from emp_calendar import emp_calendar
+from common import validate_login
 
 def dtr_page():
     left, right = st.columns(2, gap='xxsmall')
@@ -35,24 +15,15 @@ def dtr_page():
             cols = st.columns([1,1], gap='xxsmall')
             with cols[0]:
                 if st.button(label='Time In', width='stretch'):
-                    time_loc(st.session_state.document)
+                    if validate_login()==True:
+                        time_loc(st.session_state.document, 'login')
+                    else:
+                        st.toast('You are already logged in')
             with cols[1]:
-                st.button(label='Time Out', width='stretch')
-            
-    
-
+                if st.button(label='Time Out', width='stretch'):
+                    time_loc(st.session_state.document, 'logout')
 
 
     with right:
-        st.markdown(f"""
-            <div style="
-                background: white;
-                border: 1px solid #E2E8F0;
-                border-radius: 10px;
-                padding: 10px;
-                box-shadow: 0 4px 12px rgba(0,0,0,.06);
-                margin-bottom: 20px;">
-                <div>
-                    "Bundy Clock"
-                </div>
-            </div>""", unsafe_allow_html=True)
+        # st.write(st.session_state.document)
+        emp_calendar()

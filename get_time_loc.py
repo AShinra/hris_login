@@ -3,6 +3,9 @@ import pandas as pd
 from streamlit_geolocation import streamlit_geolocation
 from geopy.geocoders import Nominatim
 from datetime import datetime
+from logs import employee_log
+from common import update_credentials
+from uuid import uuid4
 
 
 # ---------------------------------------------------------------------------
@@ -49,11 +52,30 @@ def login_screen():
 # Main app — shown only after login. Captures the user's location.
 # ---------------------------------------------------------------------------
 @st.dialog('Time and Location')
-def time_loc(item):
-    st.title("📍 Your Location")
-    st.write(f"Welcome, **{st.session_state.document['first_name']}**!")
+def time_loc(item, type):
 
-    st.write("Click the location icon below and allow access in your browser:")
+    time_loc_data = []
+
+    st.markdown(f'''
+        <div style="line-height:1.0; width:100%;">
+            <p>
+                <span>
+                    Welcome,&nbsp;
+                </span>
+                <span>
+                    <strong>{st.session_state.document['first_name']}</strong>
+                </span>
+            </p>
+            <p>
+                <span>
+                    Click the icon to&nbsp;
+                </span>
+                <span style="color:red;">
+                    <strong>{type.title()}</strong>
+                </span>
+            </p>
+        </div>
+    ''', unsafe_allow_html=True)
 
     # The component renders its own button. Call it directly and check the
     # coordinate values — a dict full of None is still truthy.
@@ -62,9 +84,6 @@ def time_loc(item):
     if location and location.get("latitude") is not None:
         latitude = location["latitude"]
         longitude = location["longitude"]
-
-        # st.success(f"Latitude: {latitude}")
-        # st.success(f"Longitude: {longitude}")
 
         geolocator = Nominatim(user_agent="hris_app")
 
@@ -80,38 +99,34 @@ def time_loc(item):
                         "latitude": location.latitude,
                         "longitude": location.longitude,
                         "raw": location.raw}
-            # st.write(loc_data['address'])
-            # st.write(f'{item} at {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')
-            st.write(f'You are logged in at {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')
 
-        # accuracy = location.get("accuracy")
-        # if accuracy is not None:
-        #     st.caption(f"Accuracy: ±{accuracy:.0f} m")
-            with st.expander("Map"):
+
+            # _time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            # st.write(_time)
+            # st.map(pd.DataFrame({"lat": [latitude], "lon": [longitude]}))
+
+            time_loc_data.append(loc_data)
+            _date = datetime.now()
+            time_loc_data.append(_date)
+            session_number = str(uuid4())
+            update_credentials(session_number, _date)
+
+            st.markdown(f'''
+                <div style="line-height:1.0; width:100%;">
+                    <p><strong>Location</strong></p>
+                    <p style="color:blue;">{loc_data["address"]}</p>
+                    <p><strong>Time</strong></p>
+                    <p style="color:blue;">{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}</p>
+                </div>
+            ''', unsafe_allow_html=True)
+
+            # st.markdown(f'**:red[Location]**: {loc_data["address"]}')
+            # st.markdown(f'**:red[Date and Time]**: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')
+            with st.expander('Location Viewer'):
                 st.map(pd.DataFrame({"lat": [latitude], "lon": [longitude]}))
 
-        # with st.expander("Raw location data"):
-        #     st.write(location)
+            employee_log(time_loc_data, type, session_number)
     else:
         st.info("Waiting for location — click the icon above and allow access.")
 
-    # st.divider()
-    # if st.button("Log out"):
-    #     st.session_state.logged_in = False
-    #     st.session_state.username = ""
-    #     st.rerun()
-
-
-# ---------------------------------------------------------------------------
-# Router
-# ---------------------------------------------------------------------------
-# def main():
-#     init_state()
-
-#     if st.session_state.logged_in==True:
-#         location_screen()
-#     else:
-#         login_screen()
-
-# if __name__ == "__main__":
-#     main()
+    

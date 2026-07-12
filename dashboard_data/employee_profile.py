@@ -16,7 +16,7 @@ def info_card(title, items, icon):
 
     st.markdown(f"""
             <div style="
-                        background: white;
+                        background: #8dc1ee;
                         border: 1px solid #E2E8F0;
                         border-radius: 10px;
                         padding: 10px;
@@ -24,7 +24,7 @@ def info_card(title, items, icon):
                         margin-bottom: 20px;">
                 <div>
                     <i class="bi {icon}" style="color:blue; font-size:25px;"></i>
-                    <b style="color:#4F46E5; font-size:20px;">{title}</b>
+                    <b style="color:#ffffff; font-size:20px;">{title}</b>
                 </div>
                     <div style="
                     background: #FAFAFF;

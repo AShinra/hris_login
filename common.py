@@ -2,6 +2,9 @@ import streamlit as st
 import streamlit.components.v1 as components
 from pathlib import Path
 import base64
+from mongodb_connect.connect import connect_to_collection
+from uuid import uuid4
+from datetime import datetime
 
 def bg_markdown(item):
     st.markdown(
@@ -109,7 +112,7 @@ def flip_clock():
         font-family: 'Arial Black', sans-serif;
     }
     .digit {
-        background: linear-gradient(black, gray);
+        background: linear-gradient(black, blue);
         color: white;
         font-size: 50px;
         padding: 10px 10px;
@@ -159,3 +162,49 @@ def flip_clock():
     """
     
     components.html(html, height=120)
+
+
+def validate_login():
+    # get the latest session number
+    credentials_id = st.session_state.document['credentials_id']
+    collection = connect_to_collection('credentials')
+    doc = collection.find_one(credentials_id)
+    
+    if doc and 'session_number' in doc:
+        if datetime.now().date()==doc['session_date'].date():
+            return False
+        else:
+            return True
+
+    else:
+        session_numer = str(uuid4())
+        collection.update_one(
+            {'credentials_id':credentials_id},
+            {
+                "$set":
+                {
+                    'session_number':session_numer,
+                    'session_date':None
+                }
+            }
+        )
+        return True
+
+def update_credentials(session_number, _date):
+    credentials_id = st.session_state.document['credentials_id']
+    collection = connect_to_collection('credentials')
+    doc = collection.find_one({'_id':credentials_id})
+    collection.update_one(
+        {'_id':credentials_id},
+        {
+            "$set":
+                {
+                    'session_number':session_number,
+                    'session_date':_date
+                }
+            }
+        )
+
+def validate_logout():
+    ''''''
+
