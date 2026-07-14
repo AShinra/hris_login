@@ -162,6 +162,7 @@ def init_state():
     st.session_state.setdefault("logged_in", False)
     st.session_state.setdefault("username", "")
     st.session_state.setdefault("document", "")
+    st.session_state.setdefault("cred_document", "")
 
 # ---------------------------------------------------------------------------
 # Login window
@@ -170,7 +171,7 @@ def login_screen():
 
     add_bg("images/background/signin.jpg")
 
-    left, center, right = st.columns([1, 2, 1])
+    left, center, right = st.columns([3, 2, 3])
 
     with center:
         with st.container(border=False):            
@@ -205,6 +206,7 @@ def login_screen():
                         employee_collection = connect_to_collection('employees')
                         st.session_state.logged_in=True
                         st.session_state.document=employee_collection.find_one({'credentials_id':credential_id})
+                        st.session_state.cred_document=document
                         st.rerun()
             
             cols = st.columns(2)
@@ -217,10 +219,6 @@ def login_screen():
                     <p style="margin:0px 0 0 1.2; text-align:right; font-size:10px;"><strong>JMJD Solutions</strong></p>
                 </div>
                 """, unsafe_allow_html=True)
-
-
-
-
 
 def main():
     init_state()    
